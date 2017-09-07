@@ -40,21 +40,6 @@ inverse_cdf<-function(cdf) {
 }
 
 
-simulate_a_group_of_people<-function(n, rounds) {
-  
-  take_n_people = c()
-  
-  #let's generate a group of n people from Venter's cohort
-  for (i in 1:n){
-    sex_ethnicity_label = inverse_cdf(people.cdf)
-    age_label =  inverse_cdf(age.cdf)
-    final_label = paste(sex_ethnicity_label, age_label, sep='_')
-    take_n_people = rbind(take_n_people, final_label)
-  }
-  colnames(take_n_people)[1] <- 'labels' #the name of the column
-  return(take_n_people)
-}
-
 
 
 test_venter<-function(rounds, n) {
@@ -81,7 +66,7 @@ test_venter<-function(rounds, n) {
   #start sampling
   for (i in 1:rounds){
     #let draw n people from the distribution
-    a_group_of_people = (simulate_a_group_of_people(n))
+    a_group_of_people = (simulate_a_group_of_people(n, people.cdf, age.cdf))
     our_person = a_group_of_people[1] # we decided arbitrarly that the person of interest is always first
     z = length(grep(our_person, a_group_of_people))
     
@@ -93,4 +78,19 @@ test_venter<-function(rounds, n) {
   
 }
 
+
+simulate_a_group_of_people<-function(n, people.cdf, age.cdf) {
+  
+  take_n_people = c()
+  
+  #let's generate a group of n people from Venter's cohort
+  for (i in 1:n){
+    sex_ethnicity_label = inverse_cdf(people.cdf)
+    age_label =  inverse_cdf(age.cdf)
+    final_label = paste(sex_ethnicity_label, age_label, sep='_')
+    take_n_people = rbind(take_n_people, final_label)
+  }
+  colnames(take_n_people)[1] <- 'labels' #the name of the column
+  return(take_n_people)
+}
 
